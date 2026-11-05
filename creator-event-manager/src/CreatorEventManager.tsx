@@ -24,44 +24,47 @@ function CreatorEventManager() {
         date: ""
     });
 
-    const totalEvents = events.length;
 
-    const upcomingEvents = events.filter((event) => event.status === "Upcoming");
-    const completedEvents = events.filter((event) => event.status === "Completed");
-
-    const handleSubmit = (e: any) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
         const Ttitle = title.trim();
+
         const newErrors = {
             title: "",
             date: ""
         };
 
-        if(!Ttitle) {
-            newErrors.title = "Event Title is Required"
+        if (!Ttitle) {
+            newErrors.title = "Event Title is Required";
         }
-        if(!date) {
-            newErrors.date = "Event Date is Required"
-        }
-        setError(newErrors);
-        if(newErrors.title || newErrors.date) return;
-        
-        const newEvent = () => {
-            // id: Date.now(),
-            // title: Ttitle,
-            // date: date,
-            // status: "Upcoming"
 
-            setEvents((prev: any) => [...prev, newEvent]);
-            setTitle("");
-            setDate("");
-            setError({
-                title: "",
-                date: ""
-            });
+        if (!date) {
+            newErrors.date = "Event Date is Required";
         }
-        console.log("Event==================>>", newEvent)
-    }
+
+        setError(newErrors);
+
+        if (newErrors.title || newErrors.date) return;
+
+        const newEvent = {
+            id: Date.now(),
+            title: Ttitle,
+            date: date,
+            status: "Upcoming" as const
+        };
+
+        setEvents((prev) => [...prev, newEvent]);
+
+        setTitle("");
+        setDate("");
+
+        setError({
+            title: "",
+            date: ""
+        });
+    };
+
 
     const handleToggle = (id: any) => {
         setEvents((prev) => prev.map((event) => event.id === id ? {
@@ -80,7 +83,7 @@ function CreatorEventManager() {
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Event Title</label>
-                    <input 
+                    <input
                         type="text"
                         placeholder="Enter Event Title"
                         value={title}
@@ -89,13 +92,13 @@ function CreatorEventManager() {
                             setError((prev) => ({
                                 ...prev, title: ""
                             }))
-                        })} 
+                        })}
                     />
                     {error.title && <p>{error.title}</p>}
                 </div>
                 <div>
                     <label>Event Title</label>
-                    <input 
+                    <input
                         type="date"
                         placeholder="Enter Event Date"
                         value={date}
@@ -104,7 +107,7 @@ function CreatorEventManager() {
                             setError((prev) => ({
                                 ...prev, date: ""
                             }))
-                        })} 
+                        })}
                     />
                     {error.date && <p>{error.date}</p>}
                     <button type="submit">Add Event</button>
